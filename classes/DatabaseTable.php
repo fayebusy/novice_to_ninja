@@ -1,11 +1,11 @@
 <?php
 class DatabaseTable
 {
-    public $pdo;
-    public $table;
-    public $primaryKey;
+    private $pdo;
+    private $table;
+    private $primaryKey;
 
-    public function __construct($pdo,$table,$primaryKey)
+    public function __construct(PDO $pdo, string $table,string $primaryKey)
     {
         $this->pdo = $pdo;
         $this->primaryKey = $primaryKey;
@@ -17,7 +17,7 @@ class DatabaseTable
         $query->execute($parameters);
         return $query;
     }
-    public function total( $table)
+    public function total()
     {
         $query = $this->query('SELECT COUNT(*) FROM `' . $this->table . '`');
         $row = $query->fetch();
@@ -70,7 +70,7 @@ class DatabaseTable
     }
     public function findAll()
     {
-        $result = query($this->pdo, 'SELECT * FROM `' . $this->table . '`');
+        $result = $this->query('SELECT * FROM `' . $this->table . '`');
         return $result->fetchAll();
     }
     private function processDates($fields)
