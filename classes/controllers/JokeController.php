@@ -4,7 +4,7 @@ class JokeController
 {
     private $authorsTable;
     private $jokesTable;
-    public function __construct(DatabaseTable $authorsTable, DatabaseTable $jokesTable)
+    public function __construct( DatabaseTable $jokesTable,DatabaseTable $authorsTable)
     {
         $this->authorsTable = $authorsTable;
         $this->jokesTable = $jokesTable;
