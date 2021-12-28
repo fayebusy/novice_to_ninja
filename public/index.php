@@ -9,7 +9,7 @@ try {
      * la fin ou stoppe au premier point d'interrogation
      */
     $route = ltrim(strtok($_SERVER['REQUEST_URI'], '?'), '/');
-    $entryPoint = new \Youtech\EntryPoint($route,new \JokeDB\JokeDBRoutes());
+    $entryPoint = new \Youtech\EntryPoint($route,new \JokeDB\JokeDBRoutes(),$_SERVER['REQUEST_METHOD']);
     $entryPoint->run();
 } catch (PDOException $e) {
     $title = 'An error has occurred';

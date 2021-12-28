@@ -53,9 +53,7 @@ class Joke
 
 	    header('location: /joke/list');
     }
-    public function edit () {
-        if (isset($_POST['joke'])) {
-
+    public function saveEdit () {
             $joke = $_POST['joke'];
             $joke['jokedate'] = new \DateTime();
             $joke['authorId'] = 1;
@@ -64,8 +62,9 @@ class Joke
             
             header('location: /joke/list');  
     
-        }
-        else {
+    }
+    public function edit (){
+        
     
             if (isset($_GET['id'])) {
                 $joke = $this->jokesTable->findById($_GET['id']);
@@ -79,6 +78,6 @@ class Joke
                 'variables' => [
                     'joke' => $joke ?? null ]
             ];
-        }
+        
     }
 }
