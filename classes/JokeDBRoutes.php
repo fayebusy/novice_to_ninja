@@ -3,7 +3,6 @@ class JokeDBRoutes {
     public function callAction($route)
     {
         include __DIR__ . '/../includes/DatabaseConnection.php';
-        include __DIR__ . '/../classes/DatabaseTable.php';
         $jokesTable = new DatabaseTable($pdo, 'joke', 'id');
         $authorsTable = new DatabaseTable($pdo, 'author', 'id');
         if ($route === 'joke/list') {

@@ -1,11 +1,13 @@
 <?php
 
 try {
-    include __DIR__ . '/../classes/EntryPoint.php';
-    include __DIR__ . '/../classes/JokeDBRoutes.php';
-
-    
-    //if no route variable is set, use 'joke/home' 
+    // fonction autoload qui permet de charger automatiquement 
+    // les classes sans faires d'includes
+    include __DIR__ . '/../includes/autoload.php';
+    /**
+     * Commence a charger a partir du premier / et se termine a 
+     * la fin ou stoppe au premier point d'interrogation
+     */
     $route = ltrim(strtok($_SERVER['REQUEST_URI'], '?'), '/');
     $entryPoint = new EntryPoint($route,new JokeDBRoutes());
     $entryPoint->run();
