@@ -1,10 +1,10 @@
 <?php
-
-class JokeController
+namespace JokeDB\Controllers;
+class Joke
 {
     private $authorsTable;
     private $jokesTable;
-    public function __construct( DatabaseTable $jokesTable,DatabaseTable $authorsTable)
+    public function __construct( \Youtech\DatabaseTable $jokesTable,\Youtech\DatabaseTable $authorsTable)
     {
         $this->authorsTable = $authorsTable;
         $this->jokesTable = $jokesTable;
@@ -57,7 +57,7 @@ class JokeController
         if (isset($_POST['joke'])) {
 
             $joke = $_POST['joke'];
-            $joke['jokedate'] = new DateTime();
+            $joke['jokedate'] = new \DateTime();
             $joke['authorId'] = 1;
     
             $this->jokesTable->save($joke);
