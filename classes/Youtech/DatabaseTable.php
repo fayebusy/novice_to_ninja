@@ -1,12 +1,14 @@
 <?php
+
 namespace Youtech;
+
 class DatabaseTable
 {
     private $pdo;
     private $table;
     private $primaryKey;
 
-    public function __construct(\PDO $pdo, string $table,string $primaryKey)
+    public function __construct(\PDO $pdo, string $table, string $primaryKey)
     {
         $this->pdo = $pdo;
         $this->primaryKey = $primaryKey;
@@ -24,7 +26,7 @@ class DatabaseTable
         $row = $query->fetch();
         return $row[0];
     }
-    public function findById( $value)
+    public function findById($value)
     {
         $query = 'SELECT * 
         FROM `' .
@@ -35,7 +37,17 @@ class DatabaseTable
         $query = $this->query($query, $parameters);
         return $query->fetch();
     }
-    private function insert( $fields)
+    public function find($column, $value)
+    {
+        $query = 'SELECT * FROM ' . $this->table . ' WHERE ' .
+            $column . ' = :value';
+        $parameters = [
+            'value' => $value
+        ];
+        $query = $this->query($query, $parameters);
+        return $query->fetchAll();
+    }
+    private function insert($fields)
     {
         $query = 'INSERT INTO `' . $this->table . '` (';
         foreach ($fields as $key => $value) {
