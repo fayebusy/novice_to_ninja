@@ -12,13 +12,13 @@ try {
     $jokesTable = new DatabaseTable($pdo, 'joke', 'id');
     $authorsTable = new DatabaseTable($pdo, 'author', 'id');
     //if no route variable is set, use 'joke/home' 
-    $route = $_GET['route'] ?? 'joke/home';
+    $route = ltrim(strtok($_SERVER['REQUEST_URI'], '?'), '/');
     if ($route == strtolower($route)) {
         if ($route === 'joke/list') {
             include __DIR__ . '/../classes/controllers/JokeController.php';
             $controller = new JokeController($jokesTable, $authorsTable);
             $page = $controller->list();
-        } elseif ($route === 'joke/home') {
+        } elseif ($route === 'joke/home' || $route ==='') {
             include __DIR__ . '/../classes/controllers/JokeController.php';
             $controller = new JokeController($jokesTable, $authorsTable);
             $page = $controller->home();
@@ -37,9 +37,8 @@ try {
         }
     } else {
         http_response_code(301);
-        header('location: index.php?
-        action=' . strtolower($action) .
-            '&controller=' . strtolower($controllerName));
+        header('location: /route=' . strtolower($route));
+
     }
     $title = $page['title'];
 
