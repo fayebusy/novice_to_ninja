@@ -10,6 +10,7 @@ class JokeDBRoutes implements \Youtech\Routes
         $jokesTable = new \Youtech\DatabaseTable($pdo, 'joke', 'id');
         $authorsTable = new \Youtech\DatabaseTable($pdo, 'author', 'id');
         $jokeController = new \JokeDB\Controllers\Joke($jokesTable, $authorsTable);
+        $authorController =new \JokeDB\Controllers\Register($authorsTable);
         $routes = [
             'joke/edit' => [
                 'POST' => [
@@ -31,6 +32,22 @@ class JokeDBRoutes implements \Youtech\Routes
                 'GET' => [
                     'controller' => $jokeController,
                     'action' => 'list'
+                ]
+            ],
+            'author/register'=> [
+                'GET' => [
+                    'controller' => $authorController,
+                    'action' => 'registrationForm'
+                ],
+                'POST' => [
+                    'controller' => $authorController,
+                    'action' => 'registerUser'
+                ]
+            ],
+            'author/success'=> [
+                'GET' => [
+                    'controller' => $authorController,
+                    'action' => 'success'
                 ]
             ],
             '' => [
