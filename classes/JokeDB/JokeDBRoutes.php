@@ -22,7 +22,7 @@ class JokeDBRoutes implements \Youtech\Routes
         $authorsTable = new \Youtech\DatabaseTable($pdo, 'author', 'id');
         $jokeController = new \JokeDB\Controllers\Joke($jokesTable, $authorsTable);
         $authorController = new \JokeDB\Controllers\Register($authorsTable);
-        $loginController = new \JokeDB\Controllers\Login();
+        $loginController = new \JokeDB\Controllers\Login($this->authentication);
         $routes = [
             'joke/edit' => [
                 'POST' => [
@@ -63,6 +63,22 @@ class JokeDBRoutes implements \Youtech\Routes
                     'controller' => $authorController,
                     'action' => 'success'
                 ]
+            ],
+            'login'=>[
+                'GET' => [
+                    'controller' => $loginController, 
+                    'action' => 'loginForm'
+                ],
+                'POST' => [
+                    'controller' => $loginController, 
+                    'action' => 'processLogin'
+                ]
+            ],
+            'login/success'=>[
+                'GET' => [
+                    'controller' => $loginController,
+                    'action' => 'success' ],
+                'login' => true
             ],
             'login/error' => [
                 'GET' => [
