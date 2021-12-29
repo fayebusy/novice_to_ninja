@@ -85,6 +85,12 @@ class JokeDBRoutes implements \Youtech\Routes
                 'controller' => $loginController, 'action' => 'error'
                 ]
             ],
+            'logout' => [ 
+                'GET' => [
+                    'controller' => $loginController,
+                    'action' => 'logout' 
+                ]
+            ],
             '' => [
                 'GET' => [
                     'controller' => $jokeController,

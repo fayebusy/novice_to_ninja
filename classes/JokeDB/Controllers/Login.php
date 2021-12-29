@@ -5,8 +5,7 @@ namespace JokeDB\Controllers;
 class Login
 {
     private $authentication;
-    public function __construct(\Youtech\Authentication
-    $authentication)
+    public function __construct(\Youtech\Authentication $authentication)
     {
         $this->authentication = $authentication;
     }
@@ -47,5 +46,13 @@ class Login
             'template' => 'loginerror.html.php',
             'title' => 'You are not logged in'
         ];
+    }
+    public function logout() {
+        $_SESSION = [];
+        unset($_SESSION);
+        return [
+            'template' => 'logout.html.php',
+            'title' => 'You have been logged out'
+        ]; 
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Youtech;
 
 class EntryPoint
@@ -6,11 +7,11 @@ class EntryPoint
     private $route;
     private $method;
     private $routes;
-    public function __construct(string $route,\Youtech\Routes $routes,string $method)
+    public function __construct(string $route, \Youtech\Routes $routes, string $method)
     {
         $this->route = $route;
         $this->routes = $routes;
-        $this->method=$method;
+        $this->method = $method;
         $this->checkUrl();
     }
     private function checkUrl()
@@ -27,28 +28,39 @@ class EntryPoint
         include __DIR__ . '/../../templates/' . $templateFileName;
         return ob_get_clean();
     }
-    
+
     public function run()
     {
         $routes = $this->routes->getRoutes();
         $authentication = $this->routes->getAuthentication();
-        if (isset($routes[$this->route]['login']) 
+        if (
+            isset($routes[$this->route]['login'])
             && isset($routes[$this->route]['login']) &&
-            !$authentication->isLoggedIn()) { header('location: /login/error');
-        }else {
-        $controller = $routes[$this->route] [$this->method]['controller'];
-        $action = $routes[$this->route] [$this->method]['action'];
-        $page = $controller->$action();
-        $title = $page['title'];
-
-        if (isset($page['variables'])) {
-            $output = $this->loadTemplate(
-                $page['template'],
-                $page['variables']
-            );
+            !$authentication->isLoggedIn()
+        ) {
+            header('location: /login/error');
         } else {
-            $output = $this->loadTemplate($page['template']);
+            $controller = $routes[$this->route][$this->method]['controller'];
+            $action = $routes[$this->route][$this->method]['action'];
+            $page = $controller->$action();
+            $title = $page['title'];
+
+            if (isset($page['variables'])) {
+                $output = $this->loadTemplate(
+                    $page['template'],
+                    $page['variables']
+                );
+            } else {
+                $output = $this->loadTemplate($page['template']);
+            }
+            echo $this->loadTemplate(
+                'layout.html.php', 
+                [
+                    'loggedIn' => $authentication->isLoggedIn(), 
+                    'output' => $output,
+                    'title' => $title
+                ]
+            );
         }
-        include  __DIR__ . '/../../templates/layout.html.php';}
     }
 }
