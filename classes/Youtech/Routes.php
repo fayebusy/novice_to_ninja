@@ -2,5 +2,6 @@
 namespace Youtech;
 interface Routes
 {
-    public function getRoutes();
+    public function getRoutes() : array;
+    public function getAuthentication() : \Youtech\Authentication;
 }

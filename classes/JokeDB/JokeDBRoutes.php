@@ -4,13 +4,25 @@ namespace JokeDB;
 
 class JokeDBRoutes implements \Youtech\Routes
 {
-    public function getRoutes()
+    private $authorsTable;
+    private $jokesTable;
+    private $authentication;
+
+    public function __construct()
+    {
+        include __DIR__ . '/../../includes/DatabaseConnection.php';
+        $this->jokesTable = new \Youtech\DatabaseTable($pdo, 'joke', 'id');
+        $this->authorsTable = new \Youtech\DatabaseTable($pdo, 'author', 'id');
+        $this->authentication = new \Youtech\Authentication($this->authorsTable, 'email', 'password');
+    }
+    public function getRoutes() : array
     {
         include __DIR__ . '/../../includes/DatabaseConnection.php';
         $jokesTable = new \Youtech\DatabaseTable($pdo, 'joke', 'id');
         $authorsTable = new \Youtech\DatabaseTable($pdo, 'author', 'id');
         $jokeController = new \JokeDB\Controllers\Joke($jokesTable, $authorsTable);
-        $authorController =new \JokeDB\Controllers\Register($authorsTable);
+        $authorController = new \JokeDB\Controllers\Register($authorsTable);
+        $loginController = new \JokeDB\Controllers\Login();
         $routes = [
             'joke/edit' => [
                 'POST' => [
@@ -20,13 +32,15 @@ class JokeDBRoutes implements \Youtech\Routes
                 'GET' => [
                     'controller' => $jokeController,
                     'action' => 'edit'
-                ]
+                ],
+                'login' => true
             ],
             'joke/delete' => [
                 'POST' => [
                     'controller' => $jokeController,
                     'action' => 'delete'
-                ]
+                ],
+                'login' => true
             ],
             'joke/list' => [
                 'GET' => [
@@ -34,7 +48,7 @@ class JokeDBRoutes implements \Youtech\Routes
                     'action' => 'list'
                 ]
             ],
-            'author/register'=> [
+            'author/register' => [
                 'GET' => [
                     'controller' => $authorController,
                     'action' => 'registrationForm'
@@ -42,12 +56,17 @@ class JokeDBRoutes implements \Youtech\Routes
                 'POST' => [
                     'controller' => $authorController,
                     'action' => 'registerUser'
-                ]
+                ],
             ],
-            'author/success'=> [
+            'author/success' => [
                 'GET' => [
                     'controller' => $authorController,
                     'action' => 'success'
+                ]
+            ],
+            'login/error' => [
+                'GET' => [
+                'controller' => $loginController, 'action' => 'error'
                 ]
             ],
             '' => [
@@ -59,5 +78,9 @@ class JokeDBRoutes implements \Youtech\Routes
             ]
         ];
         return $routes;
+    }
+    public function getAuthentication () : \Youtech\Authentication
+    {
+        return $this->authentication;
     }
 }

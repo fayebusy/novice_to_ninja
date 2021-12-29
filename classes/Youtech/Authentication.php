@@ -2,7 +2,7 @@
 
 namespace Youtech;
 
-class Authentification
+class Authentication
 {
     private $users;
     private $usernameColumn;
