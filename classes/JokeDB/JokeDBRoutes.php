@@ -18,10 +18,8 @@ class JokeDBRoutes implements \Youtech\Routes
     public function getRoutes() : array
     {
         include __DIR__ . '/../../includes/DatabaseConnection.php';
-        $jokesTable = new \Youtech\DatabaseTable($pdo, 'joke', 'id');
-        $authorsTable = new \Youtech\DatabaseTable($pdo, 'author', 'id');
-        $jokeController = new \JokeDB\Controllers\Joke($jokesTable, $authorsTable);
-        $authorController = new \JokeDB\Controllers\Register($authorsTable);
+        $jokeController = new \JokeDB\Controllers\Joke($this->jokesTable, $this->authorsTable,$this->authentication);
+        $authorController = new \JokeDB\Controllers\Register($this->authorsTable);
         $loginController = new \JokeDB\Controllers\Login($this->authentication);
         $routes = [
             'joke/edit' => [

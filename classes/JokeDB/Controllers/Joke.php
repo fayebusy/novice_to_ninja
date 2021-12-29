@@ -1,13 +1,18 @@
 <?php
 namespace JokeDB\Controllers;
+use \Youtech\DatabaseTable;
+use \Youtech\Authentication;
 class Joke
 {
-    private $authorsTable;
-    private $jokesTable;
-    public function __construct( \Youtech\DatabaseTable $jokesTable,\Youtech\DatabaseTable $authorsTable)
+    
+    private DatabaseTable $authorsTable;
+    private DatabaseTable $jokesTable;
+    private Authentication $authentication;
+    public function __construct( DatabaseTable $jokesTable,DatabaseTable $authorsTable,Authentication $authentication)
     {
         $this->authorsTable = $authorsTable;
         $this->jokesTable = $jokesTable;
+        $this->authentication = $authentication;
     }
     public function home()
     {
@@ -54,14 +59,12 @@ class Joke
 	    header('location: /joke/list');
     }
     public function saveEdit () {
-            $joke = $_POST['joke'];
-            $joke['jokedate'] = new \DateTime();
-            $joke['authorId'] = 1;
-    
-            $this->jokesTable->save($joke);
-            
-            header('location: /joke/list');  
-    
+        $author = $this->authentication->getUser();
+        $joke = $_POST['joke'];
+        $joke['jokedate'] = new \DateTime();
+        $joke['authorId'] = $author['id'];
+        $this->jokesTable->save($joke);
+        header('location: /joke/list');  
     }
     public function edit (){
         
