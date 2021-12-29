@@ -2,26 +2,22 @@
 namespace JokeDB\Controllers;
 use \Youtech\DatabaseTable;
 use \Youtech\Authentication;
-class Joke
-{
+class Joke {
     
     private DatabaseTable $authorsTable;
     private DatabaseTable $jokesTable;
     private Authentication $authentication;
-    public function __construct( DatabaseTable $jokesTable,DatabaseTable $authorsTable,Authentication $authentication)
-    {
+    public function __construct( DatabaseTable $jokesTable,DatabaseTable $authorsTable,Authentication $authentication) {
         $this->authorsTable = $authorsTable;
         $this->jokesTable = $jokesTable;
         $this->authentication = $authentication;
     }
-    public function home()
-    {
+    public function home() {
         $title = 'Internet Joke Database';
 
         return ['template' => 'home.html.php', 'title' => $title];
     }
-    public function list()
-    {
+    public function list() {
         $result = $this->jokesTable->findAll();
 
         $jokes = [];
@@ -34,7 +30,8 @@ class Joke
                 'joketext' => $joke['joketext'],
                 'jokedate' => $joke['jokedate'],
                 'name' => $author['name'],
-                'email' => $author['email']
+                'email' => $author['email'],
+                'authorId' => $author['id']
             ];
         }
 
@@ -42,17 +39,19 @@ class Joke
         $title = 'Joke list';
 
         $totalJokes = $this->jokesTable->total();
-
+        $author = $this->authentication->getUser();
         return [
             'template' => 'jokes.html.php', 
             'title' => $title,
             'variables' => [
                 'totalJokes' => $totalJokes,
-                'jokes' => $jokes ]
+                'jokes' => $jokes,
+                'userId' => $author['id'] ?? null 
+            ],
+                
         ];
 
     }
-    
     public function delete () {
         $this->jokesTable->delete($_POST['id']);
 
@@ -66,7 +65,7 @@ class Joke
         $this->jokesTable->save($joke);
         header('location: /joke/list');  
     }
-    public function edit (){
+    public function edit () {
         
     
             if (isset($_GET['id'])) {
