@@ -8,7 +8,11 @@
         </label>
         <?php foreach ($categories as $category) : ?>
             <label cols="40"><?= $category->name ?></label>
-            <input type="checkbox" name="category[]" value="<?= $category->id ?> " cols="40"/>   
+            <?php if ($joke && $joke->hasCategory($category->id)) : ?>
+                <input type="checkbox" checked name="category[]" value="<?= $category->id ?>" />
+            <?php else : ?>
+                <input type="checkbox" name="category[]" value="<?= $category->id ?>" />
+            <?php endif; ?>
         <?php endforeach; ?>
         <input type="submit" name="submit" value="Save">
     </form>
