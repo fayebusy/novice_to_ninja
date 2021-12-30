@@ -62,7 +62,7 @@ class Joke
     {
         $author = $this->authentication->getUser();
         $joke = $this->jokesTable->findById($_POST['id']);
-        if ($joke['authorId'] != $author['id']) return;
+        if ($joke->authorId != $author->id) return;
 
         $this->jokesTable->delete($_POST['id']);
 
