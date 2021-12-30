@@ -20,7 +20,7 @@ class JokeDBRoutes implements \Youtech\Routes
     public function getRoutes(): array
     {
         include __DIR__ . '/../../includes/DatabaseConnection.php';
-        $jokeController = new \JokeDB\Controllers\Joke($this->jokesTable, $this->authorsTable, $this->authentication);
+        $jokeController = new \JokeDB\Controllers\Joke($this->jokesTable, $this->authorsTable,$this->categoriesTable, $this->authentication);
         $authorController = new \JokeDB\Controllers\Register($this->authorsTable);
         $loginController = new \JokeDB\Controllers\Login($this->authentication);
         $categoryController = new \JokeDB\Controllers\Category($this->categoriesTable);

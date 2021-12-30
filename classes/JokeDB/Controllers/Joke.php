@@ -11,11 +11,13 @@ class Joke
     private DatabaseTable $authorsTable;
     private DatabaseTable $jokesTable;
     private Authentication $authentication;
-    public function __construct(DatabaseTable $jokesTable, DatabaseTable $authorsTable, Authentication $authentication)
+    private DatabaseTable $categoriesTable;
+    public function __construct(DatabaseTable $jokesTable, DatabaseTable $authorsTable,DatabaseTable $categoriesTable, Authentication $authentication)
     {
         $this->authorsTable = $authorsTable;
         $this->jokesTable = $jokesTable;
         $this->authentication = $authentication;
+        $this->categoriesTable=$categoriesTable;
     }
     public function home()
     {
@@ -69,12 +71,14 @@ class Joke
 
         $title = 'Edit joke';
         $author = $this->authentication->getUser();
+        $categories = $this->categoriesTable->findAll();
         return [
             'template' => 'editjoke.html.php',
             'title' => $title,
             'variables' => [
                 'joke' => $joke ?? null,
-                'userId' => $author->id ?? null
+                'userId' => $author->id ?? null,
+                'categories' => $categories
             ]
         ];
     }
