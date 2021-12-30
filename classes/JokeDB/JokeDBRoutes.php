@@ -6,19 +6,21 @@ class JokeDBRoutes implements \Youtech\Routes
 {
     private $authorsTable;
     private $jokesTable;
+    private $categoriesTable;
     private $authentication;
 
     public function __construct()
     {
         include __DIR__ . '/../../includes/DatabaseConnection.php';
-        $this->jokesTable = new \Youtech\DatabaseTable($pdo, 'joke', 'id','\jokeDB\Entity\Joke', [&$this->authorsTable]);
-        $this->authorsTable = new \Youtech\DatabaseTable($pdo, 'author', 'id','\jokeDB\Entity\Author', [&$this->jokesTable]);
+        $this->jokesTable = new \Youtech\DatabaseTable($pdo, 'joke', 'id', '\jokeDB\Entity\Joke', [&$this->authorsTable]);
+        $this->authorsTable = new \Youtech\DatabaseTable($pdo, 'author', 'id', '\jokeDB\Entity\Author', [&$this->jokesTable]);
+        $this->categoriesTable = new \Youtech\DatabaseTable($pdo, 'category', 'id');
         $this->authentication = new \Youtech\Authentication($this->authorsTable, 'email', 'password');
     }
-    public function getRoutes() : array
+    public function getRoutes(): array
     {
         include __DIR__ . '/../../includes/DatabaseConnection.php';
-        $jokeController = new \JokeDB\Controllers\Joke($this->jokesTable, $this->authorsTable,$this->authentication);
+        $jokeController = new \JokeDB\Controllers\Joke($this->jokesTable, $this->authorsTable, $this->authentication);
         $authorController = new \JokeDB\Controllers\Register($this->authorsTable);
         $loginController = new \JokeDB\Controllers\Login($this->authentication);
         $routes = [
@@ -62,32 +64,43 @@ class JokeDBRoutes implements \Youtech\Routes
                     'action' => 'success'
                 ]
             ],
-            'login'=>[
+            'login' => [
                 'GET' => [
-                    'controller' => $loginController, 
+                    'controller' => $loginController,
                     'action' => 'loginForm'
                 ],
                 'POST' => [
-                    'controller' => $loginController, 
+                    'controller' => $loginController,
                     'action' => 'processLogin'
                 ]
             ],
-            'login/success'=>[
+            'login/success' => [
                 'GET' => [
                     'controller' => $loginController,
-                    'action' => 'success' ],
+                    'action' => 'success'
+                ],
                 'login' => true
             ],
             'login/error' => [
                 'GET' => [
-                'controller' => $loginController, 'action' => 'error'
+                    'controller' => $loginController, 'action' => 'error'
                 ]
             ],
-            'logout' => [ 
+            'logout' => [
                 'GET' => [
                     'controller' => $loginController,
-                    'action' => 'logout' 
+                    'action' => 'logout'
                 ]
+            ],
+            'category/edit' =>
+            [
+                'POST' => [
+                    'controller' => $categoryController, 'action' => 'saveEdit'
+                ],
+                'GET' => [
+                    'controller' => $categoryController, 'action' => 'edit'
+                ],
+                'login' => true
             ],
             '' => [
                 'GET' => [
@@ -99,7 +112,7 @@ class JokeDBRoutes implements \Youtech\Routes
         ];
         return $routes;
     }
-    public function getAuthentication () : \Youtech\Authentication
+    public function getAuthentication(): \Youtech\Authentication
     {
         return $this->authentication;
     }

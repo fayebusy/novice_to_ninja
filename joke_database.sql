@@ -79,7 +79,7 @@ CREATE TABLE `joke` (
   PRIMARY KEY (`id`),
   KEY `authorId` (`authorId`),
   CONSTRAINT `joke_ibfk_1` FOREIGN KEY (`authorId`) REFERENCES `author` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -88,7 +88,7 @@ CREATE TABLE `joke` (
 
 LOCK TABLES `joke` WRITE;
 /*!40000 ALTER TABLE `joke` DISABLE KEYS */;
-INSERT INTO `joke` VALUES (1,'How many programmers does it take to screw in a lightbulb? None, it\'s a hardware problem.','2017-04-01',1),(2,'Why did the programmer quit his job? He didn\'t get arrays','2017-04-01',1),(3,'Why was the empty array stuck outside? It didn\'t have any keys','2017-04-01',2),(4,'this is a new joke','2021-12-24',1),(6,'pour faire peur a un informaticien dites quil a oublie un point virgule ','2021-12-28',1),(7,'thiam ne sait pas faire de blague','2021-12-29',5);
+INSERT INTO `joke` VALUES (1,'How many programmers does it take to screw in a lightbulb? None, it\'s a hardware problem.','2017-04-01',1),(2,'Why did the programmer quit his job? He didn\'t get arrays','2017-04-01',1),(3,'Why was the empty array stuck outside? It didn\'t have any keys','2017-04-01',2),(4,'this is a new joke','2021-12-24',1),(6,'pour faire peur a un informaticien dites quil a oublie un point virgule ','2021-12-28',1),(7,'thiam ne sait pas faire de blague','2021-12-29',5),(9,'this is a new joke that i add to test wether it work or not','2021-12-30',5);
 /*!40000 ALTER TABLE `joke` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -124,4 +124,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-30 12:51:12
+-- Dump completed on 2021-12-30 15:14:39
