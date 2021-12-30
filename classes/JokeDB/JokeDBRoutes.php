@@ -13,16 +13,25 @@ class JokeDBRoutes implements \Youtech\Routes
     public function __construct()
     {
         include __DIR__ . '/../../includes/DatabaseConnection.php';
-        $this->jokesTable = new \Youtech\DatabaseTable($pdo, 'joke', 'id', '\jokeDB\Entity\Joke', [&$this->authorsTable,&$this->jokeCategoriesTable]);
+        $this->jokesTable = new \Youtech\DatabaseTable($pdo, 'joke', 'id', '\jokeDB\Entity\Joke', [&$this->authorsTable, &$this->jokeCategoriesTable]);
         $this->authorsTable = new \Youtech\DatabaseTable($pdo, 'author', 'id', '\jokeDB\Entity\Author', [&$this->jokesTable]);
-        $this->categoriesTable = new \Youtech\DatabaseTable($pdo, 'category', 'id', '\jokeDB\Entity\Category',[&$this->jokesTable,&$this->jokeCategoriesTable]);
+        $this->categoriesTable = new \Youtech\DatabaseTable($pdo, 'category', 'id', '\jokeDB\Entity\Category', [&$this->jokesTable, &$this->jokeCategoriesTable]);
         $this->authentication = new \Youtech\Authentication($this->authorsTable, 'email', 'password');
-        $this->jokeCategoriesTable = new \Youtech\DatabaseTable($pdo,'joke_category','categoryId');
+        $this->jokeCategoriesTable = new \Youtech\DatabaseTable($pdo, 'joke_category', 'categoryId');
+    }
+    public function checkPermission($permission): bool
+    {
+        $user = $this->authentication->getUser();
+        if ($user && $user->hasPermission($permission)) {
+            return true;
+        } else {
+            return false;
+        }
     }
     public function getRoutes(): array
     {
         include __DIR__ . '/../../includes/DatabaseConnection.php';
-        $jokeController = new \JokeDB\Controllers\Joke($this->jokesTable, $this->authorsTable,$this->categoriesTable, $this->jokeCategoriesTable,$this->authentication);
+        $jokeController = new \JokeDB\Controllers\Joke($this->jokesTable, $this->authorsTable, $this->categoriesTable, $this->jokeCategoriesTable, $this->authentication);
         $authorController = new \JokeDB\Controllers\Register($this->authorsTable);
         $loginController = new \JokeDB\Controllers\Login($this->authentication);
         $categoryController = new \JokeDB\Controllers\Category($this->categoriesTable);
@@ -103,20 +112,28 @@ class JokeDBRoutes implements \Youtech\Routes
                 'GET' => [
                     'controller' => $categoryController, 'action' => 'edit'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => \JokeDB\Entity\Author::EDIT_CATEGORIES
             ],
             'category/list' => [
                 'GET' => [
                     'controller' => $categoryController,
                     'action' => 'list'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => \JokeDB\Entity\Author::LIST_CATEGORIES
             ],
             'category/delete' => [
                 'POST' => [
                     'controller' => $categoryController, 'action' => 'delete'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => \JokeDB\Entity\Author::REMOVE_CATEGORIES
+            ],
+            'permission/error' => [
+                'GET' => [
+                    'controller' => $jokeController, 'action' => 'error'
+                ]
             ],
             '' => [
                 'GET' => [

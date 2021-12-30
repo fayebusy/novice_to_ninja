@@ -72,6 +72,13 @@ class Joke
         }
         header('location: /joke/list');
     }
+    public function error()
+    {
+        return [
+            'template' => 'permisionerror.html.php',
+            'title' => 'Access restricted'
+        ];
+    }
     public function edit()
     {
 
