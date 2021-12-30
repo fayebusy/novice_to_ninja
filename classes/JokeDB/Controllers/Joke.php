@@ -12,12 +12,12 @@ class Joke
     private DatabaseTable $jokesTable;
     private Authentication $authentication;
     private DatabaseTable $categoriesTable;
-    public function __construct(DatabaseTable $jokesTable, DatabaseTable $authorsTable,DatabaseTable $categoriesTable, Authentication $authentication)
+    public function __construct(DatabaseTable $jokesTable, DatabaseTable $authorsTable, DatabaseTable $categoriesTable, Authentication $authentication)
     {
         $this->authorsTable = $authorsTable;
         $this->jokesTable = $jokesTable;
         $this->authentication = $authentication;
-        $this->categoriesTable=$categoriesTable;
+        $this->categoriesTable = $categoriesTable;
     }
     public function home()
     {
@@ -55,10 +55,14 @@ class Joke
     }
     public function saveEdit()
     {
+
         $author = $this->authentication->getUser();
         $joke = $_POST['joke'];
         $joke['jokedate'] = new \DateTime();
-        $author->addJoke($joke);
+        $jokeEntity = $author->addJoke($joke);
+        foreach ($_POST['category'] as $categoryId) {
+            $jokeEntity->addCategory($categoryId);
+        }
         header('location: /joke/list');
     }
     public function edit()

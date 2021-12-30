@@ -4,10 +4,11 @@
         <label for="joketext">Type your joke here:
         </label>
         <textarea id="joketext" name="joke[joketext]" rows="3" cols="40"><?= $joke->joketext ?? '' ?> </textarea>
-        <p><br>Select categories for this joke:</p>
+        <label for="joketext">Select the category (ies) for your joke :
+        </label>
         <?php foreach ($categories as $category) : ?>
-            <input type="checkbox" name="category[]" value="<?= $category->id ?>" />
-            <label><?= $category->name ?></label>
+            <label cols="40"><?= $category->name ?></label>
+            <input type="checkbox" name="category[]" value="<?= $category->id ?> " cols="40"/>   
         <?php endforeach; ?>
         <input type="submit" name="submit" value="Save">
     </form>

@@ -8,14 +8,16 @@ class JokeDBRoutes implements \Youtech\Routes
     private $jokesTable;
     private $categoriesTable;
     private $authentication;
+    private $jokeCategoriesTable;
 
     public function __construct()
     {
         include __DIR__ . '/../../includes/DatabaseConnection.php';
-        $this->jokesTable = new \Youtech\DatabaseTable($pdo, 'joke', 'id', '\jokeDB\Entity\Joke', [&$this->authorsTable]);
+        $this->jokesTable = new \Youtech\DatabaseTable($pdo, 'joke', 'id', '\jokeDB\Entity\Joke', [&$this->authorsTable,&$this->jokeCategoriesTable]);
         $this->authorsTable = new \Youtech\DatabaseTable($pdo, 'author', 'id', '\jokeDB\Entity\Author', [&$this->jokesTable]);
         $this->categoriesTable = new \Youtech\DatabaseTable($pdo, 'category', 'id');
         $this->authentication = new \Youtech\Authentication($this->authorsTable, 'email', 'password');
+        $this->jokeCategoriesTable = new \Youtech\DatabaseTable($pdo,'joke_category','categoryId');
     }
     public function getRoutes(): array
     {

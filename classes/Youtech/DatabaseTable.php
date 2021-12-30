@@ -16,8 +16,7 @@ class DatabaseTable
         string $primaryKey,
         string $className = '\stdClass',
         array $constructorArgs = []
-        )
-    {
+    ) {
         $this->pdo = $pdo;
         $this->primaryKey = $primaryKey;
         $this->table = $table;
@@ -55,7 +54,7 @@ class DatabaseTable
             'value' => $value
         ];
         $query = $this->query($query, $parameters);
-        return $query->fetchAll(\PDO::FETCH_CLASS,$this->className, $this->constructorArgs);
+        return $query->fetchAll(\PDO::FETCH_CLASS, $this->className, $this->constructorArgs);
     }
     private function insert($fields)
     {
@@ -72,6 +71,7 @@ class DatabaseTable
         $query .= ')';
         $fields = $this->processDates($fields);
         $this->query($query, $fields);
+        return $this->pdo->lastInsertId();
     }
     private function update($fields)
     {
@@ -107,13 +107,21 @@ class DatabaseTable
     }
     public function save($record)
     {
+        $entity = new $this->className(...$this->constructorArgs);
         try {
             if ($record[$this->primaryKey] == '') {
                 $record[$this->primaryKey] = null;
             }
-            $this->insert($record);
+            $entity->{$this->primaryKey} = $this->insert($record);
+            // $entity->{$this->primaryKey} = $insertId;
         } catch (\PDOException $e) {
             $this->update($record);
         }
+        foreach ($record as $key => $value) {
+            if (!empty($value)) {
+                $entity->$key = $value;
+            }
+        }
+        return $entity;
     }
 }
