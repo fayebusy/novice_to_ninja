@@ -103,11 +103,19 @@ class JokeDBRoutes implements \Youtech\Routes
                 ],
                 'login' => true
             ],
-            'category/list' => [ 'GET' => [
-                'controller' => $categoryController,
-                'action' => 'list' ],
-                'login' => true
+            'category/list' => [
+                'GET' => [
+                    'controller' => $categoryController,
+                    'action' => 'list'
                 ],
+                'login' => true
+            ],
+            'category/delete' => [
+                'POST' => [
+                    'controller' => $categoryController, 'action' => 'delete'
+                ],
+                'login' => true
+            ],
             '' => [
                 'GET' => [
                     'controller' => $jokeController,

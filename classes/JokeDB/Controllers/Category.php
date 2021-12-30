@@ -40,4 +40,9 @@ class Category
             ]
         ];
     }
+    public function delete()
+    {
+        $this->categoriesTable->delete($_POST['id']);
+        header('location: /category/list');
+    }
 }
