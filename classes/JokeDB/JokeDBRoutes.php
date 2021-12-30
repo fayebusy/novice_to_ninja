@@ -15,14 +15,14 @@ class JokeDBRoutes implements \Youtech\Routes
         include __DIR__ . '/../../includes/DatabaseConnection.php';
         $this->jokesTable = new \Youtech\DatabaseTable($pdo, 'joke', 'id', '\jokeDB\Entity\Joke', [&$this->authorsTable,&$this->jokeCategoriesTable]);
         $this->authorsTable = new \Youtech\DatabaseTable($pdo, 'author', 'id', '\jokeDB\Entity\Author', [&$this->jokesTable]);
-        $this->categoriesTable = new \Youtech\DatabaseTable($pdo, 'category', 'id');
+        $this->categoriesTable = new \Youtech\DatabaseTable($pdo, 'category', 'id', '\jokeDB\Entity\Category',[&$this->jokesTable,&$this->jokeCategoriesTable]);
         $this->authentication = new \Youtech\Authentication($this->authorsTable, 'email', 'password');
         $this->jokeCategoriesTable = new \Youtech\DatabaseTable($pdo,'joke_category','categoryId');
     }
     public function getRoutes(): array
     {
         include __DIR__ . '/../../includes/DatabaseConnection.php';
-        $jokeController = new \JokeDB\Controllers\Joke($this->jokesTable, $this->authorsTable,$this->categoriesTable, $this->authentication);
+        $jokeController = new \JokeDB\Controllers\Joke($this->jokesTable, $this->authorsTable,$this->categoriesTable, $this->jokeCategoriesTable,$this->authentication);
         $authorController = new \JokeDB\Controllers\Register($this->authorsTable);
         $loginController = new \JokeDB\Controllers\Login($this->authentication);
         $categoryController = new \JokeDB\Controllers\Category($this->categoriesTable);

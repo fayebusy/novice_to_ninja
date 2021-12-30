@@ -12,12 +12,14 @@ class Joke
     private DatabaseTable $jokesTable;
     private Authentication $authentication;
     private DatabaseTable $categoriesTable;
-    public function __construct(DatabaseTable $jokesTable, DatabaseTable $authorsTable, DatabaseTable $categoriesTable, Authentication $authentication)
+    private DatabaseTable $jokeCategoriesTable;
+    public function __construct(DatabaseTable $jokesTable, DatabaseTable $authorsTable, DatabaseTable $categoriesTable, DatabaseTable $jokeCategoriesTable, Authentication $authentication)
     {
         $this->authorsTable = $authorsTable;
         $this->jokesTable = $jokesTable;
         $this->authentication = $authentication;
         $this->categoriesTable = $categoriesTable;
+        $this->jokeCategoriesTable = $jokeCategoriesTable;
     }
     public function home()
     {
@@ -27,8 +29,14 @@ class Joke
     }
     public function list()
     {
-        $jokes = $this->jokesTable->findAll();
-        $title = 'Joke list';
+        if (isset($_GET['category'])) {
+            $category = $this->categoriesTable->findById($_GET['category']);
+            $jokes = $category->getJokes();
+        } else {
+            $jokes = $this->jokesTable->findAll();
+        }
+        // $jokes = $this->jokesTable->findAll();
+        $title = (isset($_GET['category']) ? $this->categoriesTable->findById($_GET['category'])->name . " " : "") . 'Joke list';
         $totalJokes = $this->jokesTable->total();
         $author = $this->authentication->getUser();
         return [
