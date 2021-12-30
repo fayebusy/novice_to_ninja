@@ -130,6 +130,22 @@ class JokeDBRoutes implements \Youtech\Routes
                 'login' => true,
                 'permissions' => \JokeDB\Entity\Author::REMOVE_CATEGORIES
             ],
+            'author/permissions' => [
+                'GET' => [
+                    'controller' => $authorController,
+                    'action' => 'permissions'
+                ],
+                'POST' => [
+                    'controller' => $authorController, 'action' => 'savePermissions'
+                ],
+                'login' => true
+            ],
+            'author/list' => [
+                'GET' => [
+                    'controller' => $authorController, 'action' => 'list'
+                ], 
+                'login' => true
+            ],
             'permission/error' => [
                 'GET' => [
                     'controller' => $jokeController, 'action' => 'error'

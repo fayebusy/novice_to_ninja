@@ -29,17 +29,17 @@ class Register
             $valid = false;
             $errors[] = 'Name cannot be blank';
         }
-        
+
         if (empty($author['email'])) {
             $valid = false;
             $errors[] = 'Email cannot be blank';
-        } else if (filter_var($author['email'],FILTER_VALIDATE_EMAIL) == false) { $
+        } else if (filter_var($author['email'], FILTER_VALIDATE_EMAIL) == false) {
+            $$valid = false;
+            $errors[] = 'Invalid email address';
+        } else if (count($this->authorsTable->find('email', $author['email'])) != 0) {
             $valid = false;
-            $errors[] = 'Invalid email address'; 
+            $errors[] = 'That email address is already registered';
         }
-        else if (count($this->authorsTable->find('email', $author['email']))!=0) {
-            $valid = false;
-            $errors[] = 'That email address is already registered'; }
         if (empty($author['password'])) {
             $valid = false;
             $errors[] = 'Password cannot be blank';
@@ -47,7 +47,7 @@ class Register
         // If $valid is still true, no fields were blank // and the data can be added
         if ($valid == true) {
             // Hash the password before saving it in the database 
-            $author['password'] = password_hash($author['password'],PASSWORD_DEFAULT);
+            $author['password'] = password_hash($author['password'], PASSWORD_DEFAULT);
             $this->authorsTable->save($author);
             header('Location: /author/success');
         } else {
@@ -55,11 +55,30 @@ class Register
             return [
                 'template' => 'register.html.php',
                 'title' => 'Register an account',
-                'variables'=> ['errors'=>$errors,
-                                'author'=>$author
-                            ],
-                
+                'variables' => [
+                    'errors' => $errors,
+                    'author' => $author
+                ],
+
             ];
         }
     }
+    public function list()
+    {
+        $authors = $this->authorsTable->findAll();
+        return [
+            'template' => 'authorlist.html.php', 'title' => 'Author List',
+            'variables' => [
+                'authors' => $authors
+            ]
+        ];
+    }
+    public function permissions() {
+        $author = $this->authorsTable->findById($_GET['id']);
+        $reflected = new \ReflectionClass('\Ijdb\Entity\Author'); $constants = $reflected->getConstants();
+        return ['template' => 'permissions.html.php', 'title' => 'Edit Permissions',
+        'variables' => [
+        'author' => $author,
+        'permissions' => $constants ]
+        ]; }
 }
