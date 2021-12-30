@@ -30,15 +30,15 @@ class Joke
         $jokes = [];
         // var_dump( $result);
         foreach ($result as $joke) {
-            $author = $this->authorsTable->findById($joke['authorId']);
+            $author = $this->authorsTable->findById($joke->authorId);
 
             $jokes[] = [
-                'id' => $joke['id'],
-                'joketext' => $joke['joketext'],
-                'jokedate' => $joke['jokedate'],
-                'name' => $author['name'],
-                'email' => $author['email'],
-                'authorId' => $author['id']
+                'id' => $joke->id,
+                'joketext' => $joke->joketext,
+                'jokedate' => $joke->jokedate,
+                'name' => $author->name,
+                'email' => $author->email,
+                'authorId' => $author->id
             ];
         }
 
@@ -53,7 +53,7 @@ class Joke
             'variables' => [
                 'totalJokes' => $totalJokes,
                 'jokes' => $jokes,
-                'userId' => $author['id'] ?? null
+                'userId' => $author->id ?? null
             ],
 
         ];
@@ -91,7 +91,7 @@ class Joke
             'title' => $title,
             'variables' => [
                 'joke' => $joke ?? null,
-                'userId' => $author['id'] ?? null
+                'userId' => $author->id ?? null
             ]
         ];
     }
