@@ -29,18 +29,16 @@ class Joke
     {
         $jokes = $this->jokesTable->findAll();
         $title = 'Joke list';
-
         $totalJokes = $this->jokesTable->total();
         $author = $this->authentication->getUser();
         return [
-            'template' => 'jokes.html.php',
-            'title' => $title,
+            'template' => 'jokes.html.php', 'title' => $title,
             'variables' => [
                 'totalJokes' => $totalJokes,
                 'jokes' => $jokes,
-                'userId' => $author->id ?? null
-            ],
-
+                'userId' => $author->id ?? null,
+                'categories' => $this->categoriesTable->findAll()
+            ]
         ];
     }
     public function delete()
