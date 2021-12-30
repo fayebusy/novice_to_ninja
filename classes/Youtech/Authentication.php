@@ -17,11 +17,11 @@ class Authentication
     public function login($username, $password)
     {
         $user = $this->users->find($this->usernameColumn, strtolower($username));
-        if (!empty($user) && password_verify($password, $user[0][$this->passwordColumn])) {
+        if (!empty($user) && password_verify($password, $user[0]->{$this->passwordColumn})) {
             session_regenerate_id();
             $_SESSION['username'] = $username;
             $_SESSION['password'] =
-                $user[0][$this->passwordColumn];
+                $user[0]->{$this->passwordColumn};
             return true;
         } else {
             return false;
@@ -41,7 +41,10 @@ class Authentication
             return false;
         }
         $user = $this->users->find($this->usernameColumn, strtolower($_SESSION['username']));
-        if (!empty($user) && $user[0][$this->passwordColumn] === $_SESSION['password']) {
+        // $passwordColumn = $this->passwordColumn;
+        // use brace to avoid error cause php read left to right and will try to find 
+        // $user->$this it will be an error
+        if (!empty($user) && $user[0]->{$this->passwordColumn} === $_SESSION['password']) {
             return true;
         } else {
             return false;

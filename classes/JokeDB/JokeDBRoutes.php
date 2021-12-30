@@ -12,7 +12,7 @@ class JokeDBRoutes implements \Youtech\Routes
     {
         include __DIR__ . '/../../includes/DatabaseConnection.php';
         $this->jokesTable = new \Youtech\DatabaseTable($pdo, 'joke', 'id');
-        $this->authorsTable = new \Youtech\DatabaseTable($pdo, 'author', 'id');
+        $this->authorsTable = new \Youtech\DatabaseTable($pdo, 'author', 'id','\Ijdb\Entity\Author', [$this->jokesTable]);
         $this->authentication = new \Youtech\Authentication($this->authorsTable, 'email', 'password');
     }
     public function getRoutes() : array
